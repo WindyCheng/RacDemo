@@ -14,7 +14,12 @@
 // 请求命令
 @property (nonatomic, strong, readonly) RACCommand *reuqesCommand;
 
+// 请求命令
+@property (nonatomic, strong) RACCommand *reuqesCommandFirst;
+
 //模型数组
 @property (nonatomic, strong) NSArray *models;
+
+- (void)fetchFirstPage;
 
 @end

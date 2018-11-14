@@ -61,21 +61,32 @@ static NSString *const cellId = @"Cell";
     
 ////    // 获取请求的数据
  @weakify(self);
-    [requesSiganl subscribeNext:^(NSArray *x) {
+//    [requesSiganl subscribeNext:^(NSArray *x) {
+//////
+//           @strongify(self);
+//        self.requesViewModel.models = x;
 ////
-           @strongify(self);
-        self.requesViewModel.models = x;
-//
-        [self.tableView reloadData];
-////
-    }];
-    
-    // Binding to view model
-    [RACObserve(self.requesViewModel, models) subscribeNext:^(id x) {
-        @strongify(self);
 //        [self.tableView reloadData];
+//////
+//    }];
+    
+    [requesSiganl subscribeNext:^(id x) {
+        
+        @strongify(self);
+        self.requesViewModel.models = x;
+        //
+        [self.tableView reloadData];
+        
+    } error:^(NSError *error) {
+        
     }];
     
+//    // Binding to view model
+//    [RACObserve(self.requesViewModel, models) subscribeNext:^(id x) {
+//        @strongify(self);
+////        [self.tableView reloadData];
+//    }];
+//
     
 
 }

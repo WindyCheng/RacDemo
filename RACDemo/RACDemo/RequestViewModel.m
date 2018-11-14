@@ -17,12 +17,19 @@
 {
     if (self = [super init]) {
         
-        [self initialBind];
+        //一方法一
+       // [self initialBind];
     }
     return self;
 }
 
+- (void)fetchFirstPage{
+//    self.page = 1;
+    [self.reuqesCommandFirst execute:nil];
+}
 
+
+//一方法一
 - (void)initialBind
 {
     _reuqesCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
@@ -63,9 +70,55 @@
             return modelArr;
         }];
     }];
-    
+}
 
+
+
+- (RACCommand *)reuqesCommandFirst{
     
+    if (!_reuqesCommandFirst) {
+        
+         @weakify(self)
+        _reuqesCommandFirst = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
+            return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+                
+                NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+                parameters[@"q"] = @"基础";
+                
+                [[AFHTTPSessionManager manager] GET:@"https://api.douban.com/v2/book/search"
+                                         parameters:parameters
+                                           progress:nil
+                                            success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                                                NSLog(@"%@",responseObject);
+                                                 @strongify(self)
+                                                // 请求成功调用
+                                                // 把数据用信号传递出去
+                                                
+                                                //                                           self.models = responseObject;
+//                                               self.models = responseObject;
+                                                [subscriber sendNext:responseObject];
+                                                [subscriber sendCompleted];
+                                            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                                                // 请求失败调用
+                                            }];
+                return nil;
+            }] map:^id(NSDictionary *value) {
+                NSMutableArray *dictArr = value[@"books"];
+                // 字典转模型，遍历字典中的所有元素，全部映射成模型，并且生成数组
+                NSArray *modelArr = [[dictArr.rac_sequence map:^id(id value) {
+
+                    return [Book bookWithDict:value];
+
+                }] array];
+                
+                self.models = modelArr;
+                return modelArr;
+            }];
+            
+        }];
+        
+    }
+    return _reuqesCommandFirst;
 }
 
 #pragma mark - UITableViewDataSource
