@@ -6,10 +6,10 @@ target 'RACDemo' do
   # use_frameworks!
 
   # Pods for RACDemo
-#pod 'ReactiveCocoa', '~> 2.5'
-#
-#pod 'MBProgressHUD'
-#
-#pod 'AFNetworking'
+pod 'ReactiveCocoa', '~> 2.5'
+
+pod 'MBProgressHUD'
+
+pod 'AFNetworking'
 
 end
