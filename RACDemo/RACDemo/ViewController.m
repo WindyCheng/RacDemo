@@ -20,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    ///11111
+    ///11111222
     
     [self.useNameTextField.rac_textSignal subscribeNext:^(id x){
         NSLog(@"%@", x);
